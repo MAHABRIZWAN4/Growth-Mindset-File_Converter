@@ -22,7 +22,16 @@ if files:
     with tab2:
         for file in files:  # ➡️ Yeh loop files list me se ek ek karke file ko open karta hai.       
             ext = file.name.split(".")[-1]  #  Yeh file ka extension (CSV ya XLSX) nikalta hai.
-            df = pd.read_csv(file) if ext == "csv" else pd.read_excel(file) # Yeh file ko open karne ka tareeqa decide karta hai.
+            if ext == "csv":
+                df = pd.read_csv(file)
+            else:
+                try:
+                    import openpyxl
+                    df = pd.read_excel(file)
+                except ImportError:
+                    st.error("The 'openpyxl' library is required to read Excel files. Please install it using 'pip install openpyxl'.")
+                    continue
+
             st.subheader(f"{file.name} - Preview")  # ➡️ Yeh file ka naam dikhata hai taake user ko pata chale kaunsi file upload hui hai.
             st.dataframe(df.head())   # ➡️ Yeh file ka pehla thoda sa data dikhata hai.
 
